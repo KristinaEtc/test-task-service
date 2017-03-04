@@ -6,8 +6,8 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
-    #project = models.ForeignKey(Project)
 class Task(models.Model):
+    #project = models.ForeignKey(Project)
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     due_date = models.DateField()

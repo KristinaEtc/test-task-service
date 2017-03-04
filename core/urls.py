@@ -5,7 +5,9 @@ urlpatterns = [
     # url(r'^tasks/', views.TaskList.as_view()),
     # url(r'^task/(?P<pk>[0-9]+)/$', views.TaskDetail.as_view()),
      url(r'^tasks/$', views.task_list),
-     url(r'^task/(?P<pk>[0-9]+)/$', views.task_detail),
+     url(r'^tasks/(?P<pk>[0-9]+)/$', views.task_detail),
+     url(r'^projects/$', views.project_list),
+     url(r'^projects/(?P<pk>[0-9]+)/$', views.project_detail),
 ]
 
 

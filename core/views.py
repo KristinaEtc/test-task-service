@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Task,Project
-from .serializer import TaskSerializer
+from .serializer import TaskSerializer, ProjectSerializer
 from django.http import Http404
 
 
@@ -88,8 +88,11 @@ class TaskDetail(APIView):
 
 
 ####################################################
-#       Working part of code
+#       (Seems like) working part of code
 ####################################################
+# TODO: 
+# Fall apart every time when I want to get wrong url address
+# Add logs
 
 class JSONResponse(HttpResponse):
     """
@@ -144,4 +147,49 @@ def task_detail(request, pk):
 
     elif request.method == 'DELETE':
         task.delete()
+        return HttpResponse(status=204)
+
+@csrf_exempt
+def project_list(request):
+    """
+    List all code task, or create a new project.
+    """
+    if request.method == 'GET':
+        projects = Project.objects.all()
+        serializer = ProjectSerializer(projects, many=True)
+        return JSONResponse(serializer.data)
+       # return Response(serializer.data) # Why doesn't work? I NEED TO KNOW
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = ProjectSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data, status=201)
+        return JSONResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def project_detail(request, pk):
+    """
+    Retrieve, update or delete a project.
+    """
+    try:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = ProjectSerializer(project)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = ProjectSerializer(project, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data)
+        return JSONResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        project.delete()
         return HttpResponse(status=204)
