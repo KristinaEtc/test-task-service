@@ -7,7 +7,7 @@ class Project(models.Model):
         return self.title
 
 class Task(models.Model):
-    #project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, null=True)
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     due_date = models.DateField()
