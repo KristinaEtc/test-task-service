@@ -7,6 +7,11 @@ urlpatterns = [
     url(r'^task/edit/(?P<pk>[0-9]+)/$', views.edit_task),
     url(r'^task/delete/(?P<pk>[0-9]+)/$', views.delete_task),
     url(r'^task/add/$', views.add_task),
+
+    url(r'^users/register', 'views.create_auth'),
+
+   # url(r'^users/$', views.UserList.as_view()),
+   # url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
  
 
     url(r'^project/get-all/$', views.get_all_projects),

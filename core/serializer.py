@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Task, Project
+from django.contrib.auth.models import User
 
 class ProjectSerializer(serializers.ModelSerializer):
 
@@ -10,6 +11,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     project = ProjectSerializer(required=False)
+   
     class Meta:
         model = Task
         fields = ('project','title', 'description', 'due_date')
@@ -23,3 +25,9 @@ class TaskSerializer(serializers.ModelSerializer):
             task = Task.objects.create(project=projectObj,**validated_data)
         task.save() 
         return task
+
+class UserSerializer(serializers.ModelSerializer):
+    tasks  = serializers.PrimaryKeyRelatedField(many=True, queryset=Task.objects.all())
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'tasks')

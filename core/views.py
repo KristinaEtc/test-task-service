@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Task,Project
-from .serializer import TaskSerializer, ProjectSerializer
+from .serializer import TaskSerializer,ProjectSerializer,UserSerializer
 from django.http import Http404
 from rest_framework.decorators import api_view
 
@@ -12,6 +13,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+
+
+from django.contrib.auth.models import User
 
 ####################################################
 #       Working (no) part of code
@@ -27,6 +31,17 @@ class JSONResponse(HttpResponse):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 
 ####################################################################
@@ -140,8 +155,6 @@ def add_project(request):
         serializer.save()
         return JSONResponse(serializer.data, status=201)
     return JSONResponse(serializer.errors, status=400)
-
-
 
 
 

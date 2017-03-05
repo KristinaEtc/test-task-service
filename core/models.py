@@ -7,6 +7,7 @@ class Project(models.Model):
         return self.title
 
 class Task(models.Model):
+    assigned_to = models.ForeignKey('auth.User', related_name='assigned', on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, null=True)
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
